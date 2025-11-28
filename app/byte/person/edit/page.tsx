@@ -10,8 +10,6 @@ import { PersonDetail, Person } from "@/app/api/models/person.types";
 export default function EditPersonPage() {
   const router = useRouter();
   const params = useSearchParams();
-
-  // obtener ?id=123
   const id = Number(params.get("id"));
 
   const [person, setPerson] = useState<Person | null>(null);
@@ -36,7 +34,6 @@ export default function EditPersonPage() {
       Name: formData.Name,
       Address: formData.Address,
       Phone_Number: formData.Phone_Number
-      // NOTA: details NO SE EDITAN EN ESTE requerimiento
     });
 
     router.push("/byte/person");

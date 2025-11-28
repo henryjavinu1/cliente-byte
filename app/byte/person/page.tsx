@@ -8,9 +8,7 @@ import { PersonTable } from "@/components/PersonTable";
 import { Pagination } from "@/components/Pagination";
 import { deletePerson } from "@/app/api/services/person.services";
 import { ConfirmModal } from "@/components/ConfirmModal";
-
-type SortField = "ID" | "Name";
-type SortOrder = "asc" | "desc";
+import { AuthGuard } from "@/components/AuthGuard";
 
 const PAGE_SIZE = 5;
 
@@ -80,82 +78,86 @@ export default function PersonListPage() {
   };
 
   const confirmDelete = async () => {
-  if (!selectedPerson) return;
+    if (!selectedPerson) return;
 
-  try {
-    await deletePerson(selectedPerson.ID);
+    try {
+      await deletePerson(selectedPerson.ID);
+      const response = await getPersons(
+        page,
+        PAGE_SIZE,
+        sortBy,
+        sortOrder,
+        debouncedSearch
+      );
+      setPersons(response.data);
+      setTotal(response.total);
+    } catch (err) {
+      console.error("Error eliminando", err);
+    }
 
-    // recargar tabla
-    const response = await getPersons(page, PAGE_SIZE, sortBy, sortOrder, debouncedSearch);
-    setPersons(response.data);
-    setTotal(response.total);
-
-  } catch (err) {
-    console.error("Error eliminando", err);
-  }
-
-  setDeleteModalOpen(false);
-  setSelectedPerson(null);
-};
-
+    setDeleteModalOpen(false);
+    setSelectedPerson(null);
+  };
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Personas</h1>
-        <button
-          onClick={handleNew}
-          className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
-        >
-          Nuevo
-        </button>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
-          <label className="block text-sm font-medium mb-1">
-            Buscar por nombre
-          </label>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => {
-              setPage(1);
-              setSearch(e.target.value);
-            }}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-            placeholder="Escribe un nombre..."
-          />
+    <AuthGuard>
+      <div className="p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold">Personas</h1>
+          <button
+            onClick={handleNew}
+            className="px-4 py-2 rounded bg-blue-600 text-white text-sm hover:bg-blue-700"
+          >
+            Nuevo
+          </button>
         </div>
+
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium mb-1">
+              Buscar por nombre
+            </label>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              placeholder="Escribe un nombre..."
+            />
+          </div>
+        </div>
+
+        {loading && <div className="text-sm text-gray-500">Cargando...</div>}
+        {error && <div className="text-sm text-red-600">{error}</div>}
+
+        <PersonTable
+          data={persons}
+          sortField={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+
+        <Pagination
+          currentPage={page}
+          totalItems={total}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
+
+        <ConfirmModal
+          open={deleteModalOpen}
+          title="Eliminar Persona"
+          message={`¿Deseas eliminar a ${selectedPerson?.Name}?`}
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteModalOpen(false)}
+        />
       </div>
-
-      {loading && <div className="text-sm text-gray-500">Cargando...</div>}
-      {error && <div className="text-sm text-red-600">{error}</div>}
-
-      <PersonTable
-        data={persons}
-        sortField={sortBy}
-        sortOrder={sortOrder}
-        onSortChange={handleSortChange}
-        onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
-
-      <Pagination
-        currentPage={page}
-        totalItems={total}
-        pageSize={PAGE_SIZE}
-        onPageChange={setPage}
-      />
-
-      <ConfirmModal
-        open={deleteModalOpen}
-        title="Eliminar Persona"
-        message={`¿Deseas eliminar a ${selectedPerson?.Name}?`}
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleteModalOpen(false)}
-      />
-    </div>
+    </AuthGuard>
   );
 }

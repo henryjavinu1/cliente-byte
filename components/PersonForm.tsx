@@ -70,7 +70,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
   };
 
   const handleAddDetail = (detail: PersonDetail) => {
-    if (isEdit) return; // en edit no se modifica detalle según requerimiento
+    if (isEdit) return;
     setDetails([...details, detail]);
   };
 
@@ -92,10 +92,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
           <input
             value={id}
             disabled
-            className="w-full border px-3 py-2 rounded 
-                      bg-gray-100 dark:bg-gray-700 
-                      border-gray-300 dark:border-gray-600 
-                      text-gray-800 dark:text-gray-200"
+            className="w-full border px-3 py-2 rounded  bg-gray-100 dark:bg-gray-700  border-gray-300 dark:border-gray-600  text-gray-800 dark:text-gray-200"
           />
         </div>
       )}
@@ -109,11 +106,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
           value={nit}
           onChange={(e) => setNit(e.target.value)}
           disabled={isEdit || isView}
-          className="w-full border px-3 py-2 rounded 
-                    bg-white dark:bg-gray-800 
-                    border-gray-300 dark:border-gray-600 
-                    text-gray-800 dark:text-gray-200 
-                    disabled:bg-gray-100 disabled:dark:bg-gray-700"
+          className="w-full border px-3 py-2 rounded  bg-white dark:bg-gray-800  border-gray-300 dark:border-gray-600  text-gray-800 dark:text-gray-200  disabled:bg-gray-100 disabled:dark:bg-gray-700"
         />
       </div>
 
@@ -126,11 +119,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isView}
-          className="w-full border px-3 py-2 rounded 
-                    bg-white dark:bg-gray-800 
-                    border-gray-300 dark:border-gray-600 
-                    text-gray-800 dark:text-gray-200
-                    disabled:bg-gray-100 disabled:dark:bg-gray-700"
+          className="w-full border px-3 py-2 rounded  bg-white dark:bg-gray-800  border-gray-300 dark:border-gray-600  text-gray-800 dark:text-gray-200 disabled:bg-gray-100 disabled:dark:bg-gray-700"
         />
       </div>
 
@@ -143,11 +132,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           disabled={isView}
-          className="w-full border px-3 py-2 rounded 
-                    bg-white dark:bg-gray-800 
-                    border-gray-300 dark:border-gray-600 
-                    text-gray-800 dark:text-gray-200
-                    disabled:bg-gray-100 disabled:dark:bg-gray-700"
+          className="w-full border px-3 py-2 rounded  bg-white dark:bg-gray-800  border-gray-300 dark:border-gray-600  text-gray-800 dark:text-gray-200 disabled:bg-gray-100 disabled:dark:bg-gray-700"
         />
       </div>
 
@@ -160,11 +145,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           disabled={isView}
-          className="w-full border px-3 py-2 rounded 
-                    bg-white dark:bg-gray-800 
-                    border-gray-300 dark:border-gray-600 
-                    text-gray-800 dark:text-gray-200
-                    disabled:bg-gray-100 disabled:dark:bg-gray-700"
+          className="w-full border px-3 py-2 rounded  bg-white dark:bg-gray-800  border-gray-300 dark:border-gray-600  text-gray-800 dark:text-gray-200 disabled:bg-gray-100 disabled:dark:bg-gray-700"
         />
       </div>
 
@@ -177,8 +158,7 @@ export function PersonForm({ mode, initialData, onSubmit }: Props) {
         {!isEdit && !isView && (
           <button
             onClick={() => setModalOpen(true)}
-            className="px-4 py-2 bg-green-600 dark:bg-green-700 
-                       text-white rounded hover:bg-green-700 dark:hover:bg-green-800"
+            className="px-4 py-2 bg-green-600 dark:bg-green-700  text-white rounded hover:bg-green-700 dark:hover:bg-green-800"
           >
             Agregar Detalle
           </button>
