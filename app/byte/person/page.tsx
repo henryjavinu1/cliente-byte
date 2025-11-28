@@ -6,6 +6,8 @@ import { Person, getPersonResponse } from "@/app/api/models/person.types";
 import { getPersons } from "@/app/api/services/person.services";
 import { PersonTable } from "@/components/PersonTable";
 import { Pagination } from "@/components/Pagination";
+import { deletePerson } from "@/app/api/services/person.services";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 type SortField = "ID" | "Name";
 type SortOrder = "asc" | "desc";
@@ -26,6 +28,9 @@ export default function PersonListPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search), 400);
@@ -58,23 +63,41 @@ export default function PersonListPage() {
   };
 
   const handleView = (person: Person) => {
-    // más adelante: /persons/[id]?mode=view
-    router.push(`/persons/${person.ID}?mode=view`);
+    router.push(`/byte/person/visualize?id=${person.ID}`);
   };
 
   const handleEdit = (person: Person) => {
-    router.push(`/persons/${person.ID}?mode=edit`);
+    router.push(`/byte/person/edit?id=${person.ID}`);
   };
 
   const handleDelete = (person: Person) => {
-    // Luego: abrir Modal de confirmación
-    // por ahora solo log
-    console.log("Eliminar persona", person);
+    setSelectedPerson(person);
+    setDeleteModalOpen(true);
   };
 
   const handleNew = () => {
     router.push("/byte/person/create");
   };
+
+  const confirmDelete = async () => {
+  if (!selectedPerson) return;
+
+  try {
+    await deletePerson(selectedPerson.ID);
+
+    // recargar tabla
+    const response = await getPersons(page, PAGE_SIZE, sortBy, sortOrder, debouncedSearch);
+    setPersons(response.data);
+    setTotal(response.total);
+
+  } catch (err) {
+    console.error("Error eliminando", err);
+  }
+
+  setDeleteModalOpen(false);
+  setSelectedPerson(null);
+};
+
 
   return (
     <div className="p-6 space-y-4">
@@ -124,6 +147,14 @@ export default function PersonListPage() {
         totalItems={total}
         pageSize={PAGE_SIZE}
         onPageChange={setPage}
+      />
+
+      <ConfirmModal
+        open={deleteModalOpen}
+        title="Eliminar Persona"
+        message={`¿Deseas eliminar a ${selectedPerson?.Name}?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

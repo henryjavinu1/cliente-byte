@@ -27,3 +27,13 @@ export interface Person {
     Address: string;
     Phone_Number: string;
 }
+
+export interface PersonWithDetails extends Person {
+  details: PersonDetail[];
+}
+
+export interface UpdatePersonDto {
+  Name?: string;
+  Address?: string;
+  Phone_Number?: string;
+}
