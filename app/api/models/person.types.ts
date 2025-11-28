@@ -7,10 +7,10 @@ export interface PayloadCreatePerson {
 }
 
 export interface PersonDetail {
-    Type: 'GED | BACHELORS' | 'MASTERS' | 'PHD' | 'CERTIFICATION';
-    Organization: string;
-    Acquired_credential: string;
-    Year: number;
+  Type: "GED" | "BACHELORS" | "MASTERS" | "PHD" | "CERTIFICATION";
+  Organization: string;
+  Acquired_credential: string;
+  Year: number;
 }
 
 export interface getPersonResponse {

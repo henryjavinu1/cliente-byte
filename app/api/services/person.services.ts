@@ -1,5 +1,6 @@
 import { api } from "./axiosClient";
 import { getPersonResponse } from "@/app/api/models/person.types";
+import { PayloadCreatePerson, Person } from "@/app/api/models/person.types";
 
 const BASE_API_URL = process.env.BASE_API_URL || "http://localhost:3000/api";
 
@@ -22,5 +23,12 @@ export const getPersons = async (
   }
 
   const response = await api.get<getPersonResponse>(`${BASE_API_URL}/persons?${query.toString()}`);
+  return response.data;
+};
+
+export const createPerson = async (
+  payload: PayloadCreatePerson
+): Promise<Person> => {
+  const response = await api.post<Person>(`${BASE_API_URL}/persons`, payload);
   return response.data;
 };

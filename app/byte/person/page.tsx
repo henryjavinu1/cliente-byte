@@ -21,45 +21,41 @@ export default function PersonListPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
-const [sortBy, setSortBy] = useState<"id" | "name">("name");
-const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
-
+  const [sortBy, setSortBy] = useState<"id" | "name">("name");
+  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounce simple para filtro por nombre
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(id);
   }, [search]);
 
-useEffect(() => {
-  const fetchData = async () => {
-    const response = await getPersons(
-      page,
-      PAGE_SIZE,
-      sortBy,
-      sortOrder,
-      debouncedSearch // ⬅ filtro por nombre
-    );
-    setPersons(response.data);
-    setTotal(response.total);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getPersons(
+        page,
+        PAGE_SIZE,
+        sortBy,
+        sortOrder,
+        debouncedSearch
+      );
+      setPersons(response.data);
+      setTotal(response.total);
+    };
+
+    fetchData();
+  }, [page, sortBy, sortOrder, debouncedSearch]);
+
+  const handleSortChange = (field: "id" | "name") => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+    } else {
+      setSortBy(field);
+      setSortOrder("ASC");
+    }
   };
-
-  fetchData();
-}, [page, sortBy, sortOrder, debouncedSearch]);
-
-
-const handleSortChange = (field: "id" | "name") => {
-  if (sortBy === field) {
-    setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
-  } else {
-    setSortBy(field);
-    setSortOrder("ASC");
-  }
-};
-
 
   const handleView = (person: Person) => {
     // más adelante: /persons/[id]?mode=view
@@ -77,7 +73,7 @@ const handleSortChange = (field: "id" | "name") => {
   };
 
   const handleNew = () => {
-    router.push("/persons/new");
+    router.push("/byte/person/create");
   };
 
   return (
